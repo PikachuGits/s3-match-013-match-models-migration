@@ -5,7 +5,8 @@
 「pending_review 超过 14 天未复核自动过期」的定时任务。
 
 - 技术栈：Python 3.11+ / SQLAlchemy 2 / Alembic / PostgreSQL 16（实测 3.12.12 + PG 16.16）
-- 测试：**159 passed**（真实 PostgreSQL，见 `evidence/test-results.txt`）
+- 测试：**161 passed**（真实 PostgreSQL，见 `evidence/test-results.txt`；含操作方独立复验
+  `evidence/operator-reverify.txt`）
 - 迁移：upgrade → downgrade → upgrade 往返成功，`alembic check` 零漂移（见 `evidence/migration-check.txt`）
 
 ## 快速开始
@@ -30,6 +31,10 @@ export TEST_DATABASE_URL="$DATABASE_URL"
 DATABASE_URL='postgresql+psycopg://USER:PASSWORD@127.0.0.1:5432/SCRATCH_DB' \
   ./scripts/migration-check.sh
 ```
+
+> **前置条件（务必先做第 2 步 createdb）**：测试**不会自动建库**。目标库不存在时会直接退出
+> 并提示对应的 `createdb` 命令；库名必须含 `test`（conftest 硬性拦截，已验证生效），
+> 且测试会重建该库的 `public` schema——切勿指向任何共享库。
 
 ## 表结构
 
@@ -172,6 +177,6 @@ app/
   tasks/expire.py       # 14 天过期任务
 migrations/versions/0001_match_models.py
 scripts/                # test.sh / migration-check.sh / expire_matches.py
-tests/                  # 159 项，真实 PostgreSQL 16
+tests/                  # 161 项，真实 PostgreSQL 16（含测试库前置守卫）
 evidence/               # 测试输出 / 迁移往返 / 环境版本
 ```
