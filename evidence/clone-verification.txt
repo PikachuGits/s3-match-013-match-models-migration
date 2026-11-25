@@ -1,0 +1,6 @@
+clean-clone verification @ 2026-11-25T01:30:39Z
+source commit: c639cf6d639b1de9807fe9117bc4ab98a97a584a
+clone dir: /tmp/2010-clone-verify (fresh .venv, python3.12)
+test db: clawhunt_2010_clone_test (isolated, dropped after run)
+command: TEST_DATABASE_URL=...clawhunt_2010_clone_test .venv/bin/python -m pytest -q
+result: 159 passed in 16.91s
